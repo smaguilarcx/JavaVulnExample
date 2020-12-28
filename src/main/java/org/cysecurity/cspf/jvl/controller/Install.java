@@ -113,10 +113,19 @@ public class Install extends HttpServlet {
                       if(con!=null && !con.isClosed())
                         {
                             //Database creation
-                             Statement stmt = con.createStatement();  
-                             stmt.executeUpdate("DROP DATABASE IF EXISTS "+dbname);
-                             
-                             stmt.executeUpdate("CREATE DATABASE "+dbname);
+                            //Fixing SQL Injection 
+                            CallableStatement stmt = conn.prepareCall("DROP DATABASE IF EXISTS ?");
+                            stmt.setString(1, dbname); 
+                            stmt.execute();
+
+                            CallableStatement stmt_Create = conn.prepareCall("CREATE DATABASE ?");
+                            stmt_Create.setString(1, dbname); 
+                            stmt_Create.execute();
+
+                            //Statement stmt = con.createStatement();                            
+                            //stmt.executeUpdate("DROP DATABASE IF EXISTS "+dbname);
+			                             
+                             //stmt.executeUpdate("CREATE DATABASE "+dbname);
                              con.close();
                             con= DriverManager.getConnection(dburl+dbname,dbuser,dbpass);
                              stmt = con.createStatement();
