@@ -56,6 +56,10 @@ public class LoginValidator extends HttpServlet {
                                    session.setAttribute("userid", rs.getString("id"));
                                    session.setAttribute("user", rs.getString("username"));
                                    session.setAttribute("avatar", rs.getString("avatar"));
+                                   //Fixing HttpOnly Cookies setup
+		                                 privilege.setMaxAge(360);
+		  	                              privilege.setSecure(true); 
+                                   privilege.setHttpOnly(true);
                                    Cookie privilege=new Cookie("privilege","user");
                                    response.addCookie(privilege);
                                    if(request.getParameter("RememberMe")!=null)
